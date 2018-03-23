@@ -1,14 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
-  console.log('im in user model file');
   var User = sequelize.define('User', {
       username: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        unique: true
       },
       password: {
         type: DataTypes.STRING
       },
       dashaddress: {
         type: DataTypes.STRING
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('NOW()'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('NOW()'),
       }
     }
     /*, {

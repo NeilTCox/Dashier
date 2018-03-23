@@ -4,8 +4,7 @@
     "password": null,
     "database": "novaparse",
     "host": "localhost",
-    "dialect": "mysql",
-    "port": "5432"
+    "dialect": "postgres"
   },
   "test": {
     "username": "root",

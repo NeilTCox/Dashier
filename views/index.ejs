@@ -7,20 +7,26 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/stylesheets/style.css" />
-  <title>Dashier</title>
+  <title>Dashier - Landing</title>
 </head>
 
 <body>
-  <div class="jumbotron">
-    <div class="container">
-      <h1 class="display-4l">Dashier</h1>
-      <p>The 💯 easiest way to pay or GET 😜 paid in Dash 🔥</p>
-      <hr class="my-4">
-      <button type="button" name="join" class="btn btn-primary" data-toggle="modal" data-target="#joinModal">Join</button>
-      <button type="button" name="login" class="btn btn-link" data-toggle="modal" data-target="#loginModal">Login</button>
+  <div class="container">
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-4l">Dashier</h1>
+        <p>The 💯 easiest way to pay or GET 😜 paid in Dash 🔥</p>
+        <hr class="my-4">
+        <button type="button" name="join" class="btn btn-primary" data-toggle="modal" data-target="#joinModal">Join</button>
+        <button type="button" name="login" class="btn btn-link" data-toggle="modal" data-target="#loginModal">Login</button>
+      </div>
     </div>
   </div>
+
 
   <div class="modal fade" id="joinModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -32,15 +38,15 @@
           <form method="post" action="/user/join">
             <div class="form-group">
               <label for="joinUsername">Username:</label>
-              <input type="text" class="form-control" id="joinUsername" aria-describedby="usernameHelp" placeholder="something cool">
+              <input type="text" class="form-control" id="joinUsername" name="joinUsername" aria-describedby="usernameHelp" placeholder="something cool">
             </div>
             <div class="form-group">
               <label for="joinPassword">Password:</label>
-              <input type="password" class="form-control" id="joinPassword" placeholder="s0meth1ngsup3rs3cret">
+              <input type="password" class="form-control" id="joinPassword" name="joinPassword" placeholder="s0meth1ngsup3rs3cret">
             </div>
             <div class="form-group">
               <label for="joinDashAddress">Dash Address:</label>
-              <input type="text" class="form-control" id="joinDashAddress" placeholder="(not your mailing address)">
+              <input type="text" class="form-control" id="joinDashAddress" name="joinDashAddress" placeholder="(not your mailing address)">
               <small id="dashHelp" class="form-text text-muted">Don't have a Dash address? You can get one here: <a href="https://www.dash.org">dash.org</a></small>
             </div>
             <div class="modal-footer">
@@ -64,11 +70,11 @@
           <form method="post" action="/user/login">
             <div class="form-group">
               <label for="loginUsername">Userusername</label>
-              <input type="text" class="form-control" id="loginUsername" aria-describedby="usernameHelp" placeholder="the same one used to join">
+              <input type="text" class="form-control" id="loginUsername" name="loginUsername" aria-describedby="usernameHelp" placeholder="the same one used to join">
             </div>
             <div class="form-group">
               <label for="loginPassword">Password:</label>
-              <input type="password" class="form-control" id="loginPassword" placeholder="also the same one used to join">
+              <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder="also the same one used to join">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
