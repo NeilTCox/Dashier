@@ -3,21 +3,28 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "~1.18.2",
+    "chai": "^4.1.2",
+    "client-sessions": "^0.8.0",
+    "cookie": "^0.3.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
-    "ejs": "~2.5.7",
+    "ejs": "^2.5.8",
     "express": "~4.15.5",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
+    "nodemon": "^1.17.2",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.37.1",
+    "sequelize": "^4.37.4",
     "sequelize-cli": "^4.0.0",
     "serve-favicon": "~2.4.5",
+    "socket.io": "^2.0.4",
     "sqlite3": "^4.0.0"
   }
 }

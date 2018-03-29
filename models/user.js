@@ -1,3 +1,5 @@
+var bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   var User = sequelize.define('User', {
       username: {
@@ -23,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true
       }*/
   );
+
+  User.hashPassword = function(password) {
+    return bcrypt.hashSync(password, 10);
+  };
 
   return User;
 };

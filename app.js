@@ -5,19 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var mysession = require('./config');
+var session = require('client-sessions');
+
 var index = require('./routes/index');
 var user = require('./routes/user');
 
-var app = express();
+var db = require('./models/index.js');
 
-// userModel.sync({
-//   force: true
-// }).then(function() {
-//   // Table created
-//   return userModel.create({
-//     username: 'testusername',
-//   });
-// });
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,6 +28,31 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session(mysession));
+
+app.use(function(req, res, next) {
+  if (req.session && req.session.user) {
+    db.sequelize.query(
+      'SELECT * FROM "Users" WHERE username = :username', {
+        replacements: {
+          username: req.session.user.username,
+        },
+        type: db.sequelize.QueryTypes.SELECT
+      }
+    ).then(function(user) {
+      if (user.length !== 0) { // user never longer than 1 beacuse of username uniqueness
+        req.user = user[0];
+        delete req.user.password; // delete the password from the session
+        req.session.user = user[0]; //refresh the session value
+        res.locals.user = user[0];
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+});
 
 app.use('/', index);
 app.use('/user', user);

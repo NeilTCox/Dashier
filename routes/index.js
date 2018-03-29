@@ -5,7 +5,13 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   console.log('we hit the homepage route');
-  res.render('index');
+  if (typeof req.user !== 'undefined') {
+    res.render('dashboard', {
+      loggedUser: res.locals.user
+    });
+  } else {
+    res.render('index');
+  }
 });
 
 module.exports = router;
