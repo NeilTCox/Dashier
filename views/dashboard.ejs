@@ -23,22 +23,27 @@
                   </div>
                 </div>
                 <div class="payment-container">
-                  <form class="payment-form">
+                  <form class="payment-form" id="payment-form">
                     <div class="form-row">
                       <div class="form-group col-md-1">
                         <label for="amount">Pay</label>
                       </div>
                       <div class="form-group col-md-4">
-                        <input type="number" class="form-control" id="amount" placeholder="amount">
+                        <input type="number" min="0" step="0.00001" class="form-control" name="amount" id="amount" placeholder="amount">
                       </div>
                       <div class="form-group col-md-1">
                         <label for="recipient">to</label>
                       </div>
                       <div class="form-group col-md-4">
-                        <input type="text" class="form-control" id="recipient" placeholder="recipient">
+                        <input type="text" class="form-control" name="recipient" id="recipient" placeholder="recipient">
                       </div>
                       <div class="form-group col-md-2">
-                        <button type="submit" class="btn btn-primary">✔</button>
+                        <button type="submit" class="btn btn-primary payment-button">✔</button>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-11">
+                        <input type="text" class="form-control" name="message" id="message" placeholder="message">
                       </div>
                     </div>
                   </form>
@@ -50,86 +55,43 @@
         <div class="col-md-6 dashboard-right-column">
           <div class="container post-container">
             <ul class="list-group post-group">
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
-              <li class="list-group-item">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Neil paid El Chapo</div>
-                  <div class="card-body">
-                    <h5 class="card-title">2400 Dash</h5>
-                    <p class="card-text">Thx for the hookup ;P</p>
-                  </div>
-              </li>
+              <% for(var i = postList.length-1; i >= 0; i--){ %>
+                <li class="list-group-item">
+                  <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">
+                      <%= postList[i].sender %> paid
+                        <%= postList[i].recipient %>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title"><%= postList[i].amount %> Dash</h5>
+                      <p class="card-text">
+                        <%= postList[i].message %>
+                      </p>
+                    </div>
+                </li>
+                <% } %>
             </ul>
             </div>
-            </div>
-            </div>
-            </div>
-            <script>
-              $(function() {
-                // $('.dashboard-logout').on('click', '.logout-button', function() {
-                //   $.ajax({
-                //     method: 'GET',
-                //     url: '/user/logout'
-                //   });
-                // });
-                return;
-              });
-            </script>
+          </div>
+        </div>
+      </div>
+      <script>
+        $(function() {
+          $('.payment-form').on('submit', function(event) {
+            event.preventDefault();
+            var form_data = $('.payment-form').serializeArray();
+            $.ajax({
+              method: 'POST',
+              url: '/post',
+              data: form_data
+            });
+            $('#amount').val('');
+            $('#recipient').val('');
+            $('#message').val('');
+          });
+          return;
+        });
+      </script>
   </body>
 
   </html>

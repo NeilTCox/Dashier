@@ -10,11 +10,11 @@ function checkPassword(given_password, db_password) {
 
 router.post('/join', function(req, res, next) {
   db.sequelize.query(
-    'INSERT INTO "Users" (username, password, dashaddress) VALUES (:username, :password, :address)', {
+    `INSERT INTO "Users" (username, password, dashaddress, following) VALUES (:username, :password, :dashaddress, '{${req.body.joinUsername}}')`, {
       replacements: {
         username: req.body.joinUsername,
         password: models.User.hashPassword(req.body.joinPassword),
-        address: req.body.joinDashAddress
+        dashaddress: req.body.joinDashAddress
       },
       type: db.sequelize.QueryTypes.INSERT
     }

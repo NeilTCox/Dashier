@@ -1,19 +1,16 @@
-var bcrypt = require('bcrypt');
-
 module.exports = (sequelize, DataTypes) => {
-  var User = sequelize.define('User', {
-      username: {
-        type: DataTypes.STRING,
-        unique: true
-      },
-      password: {
+  var Post = sequelize.define('Post', {
+      sender: {
         type: DataTypes.STRING
       },
-      dashaddress: {
+      amount: {
+        type: DataTypes.FLOAT
+      },
+      recipient: {
         type: DataTypes.STRING
       },
-      following: {
-        type: DataTypes.ARRAY(DataTypes.STRING)
+      message: {
+        type: DataTypes.STRING
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -29,9 +26,5 @@ module.exports = (sequelize, DataTypes) => {
       }*/
   );
 
-  User.hashPassword = function(password) {
-    return bcrypt.hashSync(password, 10);
-  };
-
-  return User;
+  return Post;
 };

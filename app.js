@@ -10,6 +10,7 @@ var session = require('client-sessions');
 
 var index = require('./routes/index');
 var user = require('./routes/user');
+var post = require('./routes/post');
 
 var db = require('./models/index.js');
 
@@ -46,8 +47,8 @@ app.use(function(req, res, next) {
         delete req.user.password; // delete the password from the session
         req.session.user = user[0]; //refresh the session value
         res.locals.user = user[0];
-        next();
       }
+      next();
     });
   } else {
     next();
@@ -56,6 +57,7 @@ app.use(function(req, res, next) {
 
 app.use('/', index);
 app.use('/user', user);
+app.use('/post', post);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
