@@ -56,7 +56,30 @@
           </div>
         </div>
         <div class="col-md-6 dashboard-right-column">
-          <% include includes/post-container.ejs %>
+          <div class="container post-container">
+            <ul class="list-group post-group">
+              <% for(var i = postList.length-1; i >= 0; i--){ %>
+                <li class="list-group-item">
+                  <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">
+                      <a href="/user/<%= postList[i].sender %>">
+                        <%= postList[i].sender %>
+                      </a> paid
+                      <a href="/user/<%= postList[i].recipient %>">
+                        <%= postList[i].recipient %>
+                      </a>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title"><%= postList[i].amount %> Dash</h5>
+                      <p class="card-text">
+                        <%= postList[i].message %>
+                      </p>
+                    </div>
+                </li>
+                <% } %>
+            </ul>
+            </div>
+          </div>
         </div>
       </div>
       <script>
@@ -105,8 +128,8 @@
             `<li class="list-group-item">
               <div class="card text-white bg-primary mb-3">
                 <div class="card-header">
-                  ${data.data.sender} paid
-                    ${data.data.recipient}
+                  <a href="/user/${data.data.sender}">${data.data.sender}</a> paid
+                    <a href="/user/${data.data.recipient}">${data.data.recipient}</a>
                 </div>
                 <div class="card-body">
                   <h5 class="card-title"> ${data.data.amount} Dash</h5>
