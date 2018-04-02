@@ -9,8 +9,17 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING
       },
-      dashaddress: {
-        type: DataTypes.STRING
+      balance: {
+        type: DataTypes.FLOAT
+      },
+      // dashaddress: {
+      //   type: DataTypes.STRING
+      // },
+      // privatekey: {
+      //   type: DataTypes.STRING
+      // },
+      friends: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
       },
       following: {
         type: DataTypes.ARRAY(DataTypes.STRING)

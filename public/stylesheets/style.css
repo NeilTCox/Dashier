@@ -17,12 +17,12 @@ a {
 
 .divider {
   border-right: grey 4px solid;
-  height: 500px;
+  height: 600px;
   margin-top: 100px;
 }
 
 .dashboard-left-container {
-  padding-top: 100px;
+  padding-top: 50px;
 }
 
 .dashboard-left-container a {
@@ -31,6 +31,7 @@ a {
 }
 
 .dashboard-username {
+  font-weight: bold;
   margin-bottom: 25px;
   text-align: center;
 }
@@ -42,8 +43,8 @@ a {
 .settings-logout-row button {
   background: transparent;
   border: none;
-  padding-bottom: 20px;
   cursor: pointer;
+  padding-bottom: 20px;
 }
 
 .dashboard-settings {
@@ -52,7 +53,7 @@ a {
 }
 
 .payment-container {
-  margin-top: 50px;
+  margin-top: 150px;
 }
 
 .payment-form label {
@@ -71,6 +72,12 @@ a {
   margin-top: 5px;
 }
 
+.wallet-balance {
+  color: #007bff;
+  margin-right: 40px;
+  text-align: right;
+}
+
 .post-container {
   max-height: 50rem;
   overflow: auto;
@@ -85,4 +92,14 @@ a {
   border: 0;
   margin: 0;
   padding: 0;
+}
+
+.profile-username {
+  margin-top: 200px;
+  text-align: center;
+}
+
+.follow_button, .unfriend-button, .unfollow-button {
+  margin-bottom: 50px;
+  text-align: center;
 }

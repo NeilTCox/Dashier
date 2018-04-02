@@ -14,11 +14,12 @@ router.get('/', function(req, res, next) {
         type: db.sequelize.QueryTypes.SELECT
       }
     ).then(function(user) {
+      console.log(user[0].friends);
       console.log(user[0].following);
       db.sequelize.query(
-        'SELECT * FROM "Posts" WHERE SENDER IN :following OR RECIPIENT IN :following', {
+        'SELECT * FROM "Posts" WHERE SENDER IN :friends OR RECIPIENT IN :friends', {
           replacements: {
-            following: [user[0].following],
+            friends: [user[0].friends],
           },
           type: db.sequelize.QueryTypes.SELECT
         }

@@ -8,7 +8,7 @@
         <div class="col-md-6 dashboard-left-column">
           <div class="divider">
             <div class="container dashboard-left-container">
-              <h1 class="dashboard-username"><a href="https://google.com">@<%= loggedUser.username %></a></h1>
+              <h1 class="dashboard-username"><a href="/user/<%= loggedUser.username %>">@<%= loggedUser.username %></a></h1>
               <div class="container">
                 <div class="row settings-logout-row">
                   <div class="col-md-6 dashboard-settings">
@@ -29,13 +29,13 @@
                         <label for="amount">Pay</label>
                       </div>
                       <div class="form-group col-md-4">
-                        <input type="number" min="0" step="0.00001" class="form-control" name="amount" id="amount" placeholder="amount">
+                        <input type="number" min="0" step="0.00001" class="form-control" name="amount" id="amount" placeholder="amount" required>
                       </div>
                       <div class="form-group col-md-1">
                         <label for="recipient">to</label>
                       </div>
                       <div class="form-group col-md-4">
-                        <input type="text" class="form-control" name="recipient" id="recipient" placeholder="recipient">
+                        <input type="text" class="form-control" name="recipient" id="recipient" placeholder="recipient" required>
                       </div>
                       <div class="form-group col-md-2">
                         <button type="submit" class="btn btn-primary payment-button">✔</button>
@@ -43,53 +43,79 @@
                     </div>
                     <div class="form-row">
                       <div class="form-group col-md-11">
-                        <input type="text" class="form-control" name="message" id="message" placeholder="message">
+                        <input type="text" class="form-control" name="message" id="message" placeholder="message" required>
                       </div>
                     </div>
                   </form>
+                </div>
+                <div class="container balance-container">
+                  <h2 class="wallet-balance"></h2>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="col-md-6 dashboard-right-column">
-          <div class="container post-container">
-            <ul class="list-group post-group">
-              <% for(var i = postList.length-1; i >= 0; i--){ %>
-                <li class="list-group-item">
-                  <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">
-                      <%= postList[i].sender %> paid
-                        <%= postList[i].recipient %>
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title"><%= postList[i].amount %> Dash</h5>
-                      <p class="card-text">
-                        <%= postList[i].message %>
-                      </p>
-                    </div>
-                </li>
-                <% } %>
-            </ul>
-            </div>
-          </div>
+          <% include includes/post-container.ejs %>
         </div>
       </div>
       <script>
         $(function() {
+          //display balance
+          // $.get(`https://api.blockcypher.com/v1/btc/test3/addrs/<%= loggedUser.dashaddress %>/balance`)
+          //   .then(function(balance) {
+          //     $('.wallet-balance').text(`Đ${balance.balance/100000000}`)
+          //     console.log(balance)
+          //   }).catch(function() {
+          //     console.log('unable to retrieve address balance');
+          //   });
+
+          // phoney balance
+          $('.wallet-balance').text('Đ<%= loggedUser.balance %>')
+
+          //send payment
           $('.payment-form').on('submit', function(event) {
             event.preventDefault();
             var form_data = $('.payment-form').serializeArray();
+
             $.ajax({
               method: 'POST',
               url: '/post',
               data: form_data
+            }).then(function(new_post) {
+              $('.wallet-balance').text('Đ' + new_post.balance);
+            }).catch(function(err) {
+              console.error(err);
             });
+
+
+
             $('#amount').val('');
             $('#recipient').val('');
             $('#message').val('');
           });
-          return;
+        });
+      </script>
+      <script src="/socket.io/socket.io.js"></script>
+      <script type="text/javascript">
+        var socket = io();
+        socket.on('newPost', (data) => {
+          console.log(data);
+          $('.post-group').prepend(
+            `<li class="list-group-item">
+              <div class="card text-white bg-primary mb-3">
+                <div class="card-header">
+                  ${data.data.sender} paid
+                    ${data.data.recipient}
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title"> ${data.data.amount} Dash</h5>
+                  <p class="card-text">
+                    ${data.data.message}
+                  </p>
+                </div>
+            </li>`
+          );
         });
       </script>
   </body>

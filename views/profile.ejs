@@ -3,7 +3,69 @@
   </head>
 
   <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
 
+        </div>
+        <div class="col-md-6 profile-column">
+          <h1 class="profile-username">@<%= givenUser.username %></h1>
+          <% if(relationship == 'friend'){%>
+            <button type="button" name="unfriend-button" class="btn btn-dark unfriend-button">Unfriend</button>
+            <%}else if(relationship == 'following'){%>
+              <button type="button" name="unfollow-button" class="btn btn-secondary unfollow-button">Unfollow</button>
+              <%}else if(relationship == 'self'){%>
+                <%}else{%>
+                  <button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>
+                  <%}%>
+                    <% include includes/post-container.ejs %>
+        </div>
+
+        <div class="col-md-3">
+
+        </div>
+      </div>
+    </div>
+    <script>
+      $(function() {
+        $('.profile-column').on('click', '.follow_button', function() {
+          $.ajax({
+            method: 'POST',
+            url: '/user/<%= givenUser.username %>/follow'
+          }).done(function(friends_now) {
+            if (friends_now) {
+              $("button").replaceWith('<button type="button" name="unfriend-button" class="btn btn-dark unfriend-button">Unfriend</button>');
+            } else {
+              $("button").replaceWith('<button type="button" name="unfollow-button" class="btn btn-secondary unfollow-button">Unfollow</button>');
+            }
+          });
+        });
+        $('.profile-column').on('click', '.unfollow-button', function() {
+          $.ajax({
+            method: 'POST',
+            url: '/user/<%= givenUser.username %>/unfollow'
+          }).done(function(err) {
+            if (err) {
+              console.error('user follow has failed');
+            } else {
+              $("button").replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
+            }
+          });
+        });
+        $('.profile-column').on('click', '.unfriend-button', function() {
+          $.ajax({
+            method: 'POST',
+            url: '/user/<%= givenUser.username %>/unfriend'
+          }).done(function(err) {
+            if (err) {
+              console.error('user follow has failed');
+            } else {
+              $("button").replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
+            }
+          });
+        });
+      });
+    </script>
   </body>
 
   </html>
