@@ -26,6 +26,8 @@ module.exports = {
             type: db.sequelize.QueryTypes.SELECT
           }
         ).then(function(friend_ids) {
+          //join your own socket
+          socket.join(cookie.content.user.id);
           if (friend_ids.length > 0) { // user never longer than 1 beacuse of username uniqueness
             for (var i = 0; i < friend_ids.length; i++) {
               socket.join(friend_ids[i].followed);
