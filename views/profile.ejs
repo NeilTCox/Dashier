@@ -26,7 +26,8 @@
                 <li class="list-group-item">
                   <div class="card text-white bg-primary mb-3">
                     <div class="card-header">
-                      <a href="/user/<%= postList[i].sender %>">
+                      <a href="
+                      /user/<%= postList[i].sender %>">
                         <%= postList[i].sender %>
                       </a> paid
                       <a href="/user/<%= postList[i].recipient %>">
@@ -62,7 +63,7 @@
           this_button = this;
           $.ajax({
             method: 'POST',
-            url: '/user/<%= givenUser.username %>/follow'
+            url: '/user/<%= givenUser.id %>/follow'
           }).done(function(friends_now) {
             if (friends_now) {
               $(this_button).replaceWith('<button type="button" name="unfriend-button" class="btn btn-dark unfriend-button">Unfriend</button>');
@@ -75,10 +76,10 @@
           this_button = this;
           $.ajax({
             method: 'POST',
-            url: '/user/<%= givenUser.username %>/unfollow'
+            url: '/user/<%= givenUser.id %>/unfollow'
           }).done(function(err) {
             if (err) {
-              console.error('user follow has failed');
+              console.error('user unfollow has failed');
             } else {
               $(this_button).replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
             }
@@ -88,10 +89,10 @@
           this_button = this;
           $.ajax({
             method: 'POST',
-            url: '/user/<%= givenUser.username %>/unfriend'
+            url: '/user/<%= givenUser.id %>/unfriend'
           }).done(function(err) {
             if (err) {
-              console.error('user follow has failed');
+              console.error('user unfriend has failed');
             } else {
               $(this_button).replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
             }

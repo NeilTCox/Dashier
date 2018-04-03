@@ -130,7 +130,7 @@ router.post('/', function(req, res) {
           return console.error(err);
         });
       } else {
-        //user does not exist
+        // does not exist
         console.log('H E k, recipient does not exist');
         res.status(500).send('recipient does not exist');
       }

@@ -19,23 +19,23 @@ module.exports = {
       if (cookie) {
         //join the socket rooms that this user is friends with
         db.sequelize.query(
-          'SELECT * FROM "Users" WHERE username = :username', {
+          'SELECT ALL followed FROM "FollowerFollowed" WHERE ((FOLLOWER = :local_id OR FOLLOWED = :local_id) AND FRIENDS = true)', {
             replacements: {
-              username: cookie.content.user.username,
+              local_id: cookie.content.user.id,
             },
             type: db.sequelize.QueryTypes.SELECT
           }
-        ).then(function(user) {
-          if (user[0]) { // user never longer than 1 beacuse of username uniqueness
-            for (var i = 0; i < user[0].friends.length; i++) {
-              socket.join(user[0].friends[i]);
+        ).then(function(friend_ids) {
+          if (friend_ids.length > 0) { // user never longer than 1 beacuse of username uniqueness
+            for (var i = 0; i < friend_ids.length; i++) {
+              socket.join(friend_ids[i].followed);
             }
-          } else {
-            //user does not exist
-            console.log('H E k, user does not exist');
-            res.status(500).send('user cookie could not be found');
           }
         });
+      } else {
+        //user does not exist
+        console.log('H E k, user does not exist');
+        res.status(500).send('user cookie could not be found');
       }
     });
   },

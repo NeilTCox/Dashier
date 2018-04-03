@@ -7,25 +7,16 @@ router.get('/', function(req, res, next) {
   console.log('we hit the homepage route');
   if (typeof req.user !== 'undefined') {
     db.sequelize.query(
-      'SELECT * FROM "Users" WHERE username = :username', {
+      'SELECT * FROM "Posts" WHERE SENDER IN (SELECT ALL username FROM "Users" WHERE ID IN (SELECT ALL followed FROM "FollowerFollowed" WHERE (FOLLOWED = :local_id AND FRIENDS = true))) OR RECIPIENT IN (SELECT ALL username FROM "Users" WHERE ID IN (SELECT ALL followed FROM "FollowerFollowed" WHERE (FOLLOWED = :local_id AND FRIENDS = true))) ORDER BY ID', {
         replacements: {
-          username: res.locals.user.username,
+          local_id: res.locals.user.id,
         },
         type: db.sequelize.QueryTypes.SELECT
       }
-    ).then(function(user) {
-      db.sequelize.query(
-        'SELECT * FROM "Posts" WHERE SENDER IN :friends OR RECIPIENT IN :friends ORDER BY ID', {
-          replacements: {
-            friends: [user[0].friends],
-          },
-          type: db.sequelize.QueryTypes.SELECT
-        }
-      ).then(function(posts) {
-        res.render('dashboard', {
-          loggedUser: res.locals.user,
-          postList: posts
-        });
+    ).then(function(posts) {
+      res.render('dashboard', {
+        loggedUser: res.locals.user,
+        postList: posts
       });
     });
   } else {

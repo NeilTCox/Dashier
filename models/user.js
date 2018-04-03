@@ -18,20 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     // privatekey: {
     //   type: DataTypes.STRING
     // },
-    friends: {
-      type: DataTypes.ARRAY(DataTypes.STRING)
-    },
-    following: {
-      type: DataTypes.ARRAY(DataTypes.STRING)
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: sequelize.literal('NOW()'),
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: sequelize.literal('NOW()'),
-    }
   });
 
   User.belongsToMany(User, {
@@ -45,8 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     through: 'FollowerFollowed',
     foreignKey: 'followed'
   });
-
-
 
   User.hashPassword = function(password) {
     return bcrypt.hashSync(password, 10);
