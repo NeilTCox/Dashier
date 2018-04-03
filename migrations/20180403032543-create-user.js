@@ -25,20 +25,6 @@ module.exports = {
       // privatekey: {
       //   type: Sequelize.STRING
       // },
-      friends: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
-      },
-      following: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('now'),
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('now'),
-      }
     });
   },
 

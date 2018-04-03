@@ -27,11 +27,15 @@ router.get('/', function(req, res, next) {
     ).then(function(posts) {
       res.render('dashboard', {
         loggedUser: res.locals.user,
-        postList: posts
+        postList: posts,
+        message: ''
       });
     });
   } else {
-    res.render('index');
+    //user not logged in
+    res.render('index', {
+      message: ''
+    });
   }
 });
 

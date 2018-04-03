@@ -52,6 +52,7 @@
                   <h2 class="wallet-balance"></h2>
                 </div>
               </div>
+              <h3 class="dashboard-message"><%= message %></h3>
             </div>
           </div>
         </div>
@@ -112,6 +113,11 @@
               data: form_data
             }).then(function(new_post) {
               $('.wallet-balance').text('Đ' + new_post.balance);
+              if (typeof new_post.parcel !== 'undefined') {
+                $('.dashboard-message').html(new_post.parcel)
+              } else {
+                $('.dashboard-message').html('')
+              }
             }).catch(function(err) {
               console.error(err);
             });

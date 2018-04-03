@@ -23,12 +23,12 @@ router.post('/join', function(req, res, next) {
       type: db.sequelize.QueryTypes.INSERT
     }
   ).then(function(user) {
-    console.log(user);
     res.redirect("/");
   }).catch(function(err) {
     //username already taken
-    res.redirect("https://yahoo.com");
-    return console.error(err);
+    res.render("index", {
+      message: "username already taken :("
+    });
   });
 });
 
@@ -44,22 +44,41 @@ router.post('/login', function(req, res, next) {
     if (user[0]) { // user never longer than 1 beacuse of username uniqueness
       checkPassword(req.body.loginPassword, user[0].password).then(function(result) {
         if (result) {
-          console.log('im before');
           req.session.user = user[0];
-          console.log('im after');
+          res.status(200).redirect('/');
+        } else {
+          res.render('index', {
+            message: "password incorrect!"
+          });
         }
-        console.log('password correct!');
-        res.status(200).redirect('/');
-      }).catch(function(err) {
-        console.log('errored checkPassword');
-        console.error(err);
-        res.status(500).send(err);
+
       });
     } else {
       //user does not exist
-      console.log('H E k, user does not exist');
-      res.redirect('https://yahoo.com');
+      res.render('index', {
+        message: "username does not exist :O"
+      });
     }
+  });
+});
+
+router.post('/changepassword', function(req, res, next) {
+  db.sequelize.query(
+    `UPDATE "Users" SET password = :password`, {
+      replacements: {
+        username: req.body.joinUsername,
+        password: models.User.hashPassword(req.body.newPassword)
+      },
+      type: db.sequelize.QueryTypes.UPDATE
+    }
+  ).then(function(user) {
+    // DO SOMETHING
+    res.redirect("/");
+  }).catch(function(err) {
+    // DO SOMETHING
+    res.render("index", {
+      message: "username already taken :("
+    });
   });
 });
 
@@ -112,18 +131,20 @@ router.get('/:username', function(req, res, next) {
               givenUser: user[0],
               postList: posts,
               relationship: current_relationship,
-              localUser: res.locals.user
+              localUser: res.locals.user,
             });
           });
         });
       } else {
         //404
-        res.render('index');
+        res.redirect('https://github.com/404');
       }
     });
   } else {
     //you must sign up to see other users
-    res.render('index');
+    res.render('index', {
+      message: '↖ please login view your friends!'
+    });
   }
 });
 

@@ -65,7 +65,8 @@ router.post('/', function(req, res) {
 
 
 
-  if (res.locals.user.balance > 0 && req.body.amount > 0) {
+  if (res.locals.user.balance > 0 && req.body.amount > 0 && req.body.amount <= res.locals.user.balance) {
+    console.log('9');
     db.sequelize.query(
       'SELECT * FROM "Users" WHERE username = :recipient', {
         replacements: {
@@ -74,7 +75,9 @@ router.post('/', function(req, res) {
         type: db.sequelize.QueryTypes.SELECT
       }
     ).then(function(user) {
+      console.log('0');
       if (user[0]) { // user never longer than 1 beacuse of username uniqueness
+        console.log('8');
         //subtract balance from sender
         db.sequelize.query(
           'UPDATE "Users" SET balance = balance - :amount WHERE username = :sender', {
@@ -86,6 +89,7 @@ router.post('/', function(req, res) {
           }
         ).then(function(post) {
           // add balance to recipient
+          console.log('1');
           db.sequelize.query(
             'UPDATE "Users" SET balance = balance + :amount WHERE username = :recipient', {
               replacements: {
@@ -95,6 +99,7 @@ router.post('/', function(req, res) {
               type: db.sequelize.QueryTypes.UPDATE
             }
           ).then(function(post) {
+            console.log('2');
             // insert new post to database
             db.sequelize.query(
               `INSERT INTO "Posts" (sender, amount, recipient, message, likes) VALUES (:sender, :amount, :recipient, :message, '{}')`, {
@@ -107,6 +112,7 @@ router.post('/', function(req, res) {
                 type: db.sequelize.QueryTypes.INSERT
               }
             ).then(function(post) {
+              console.log('3');
               //send constructed post to client along with updated balance to display
               res.locals.user.balance = res.locals.user.balance - req.body.amount;
               var newPost = {
@@ -116,29 +122,33 @@ router.post('/', function(req, res) {
                 message: req.body.message,
                 balance: res.locals.user.balance
               };
-              io.instance().to(req.user.username).emit('newPost', {
+              io.instance().to(req.user.id).emit('newPost', {
                 data: newPost
               });
               res.send(newPost);
             }).catch(function(err) {
-              return console.error(err);
+              res.send(err + 'error sending newPost');
             });
           }).catch(function(err) {
-            return console.error(err);
+            res.send(err + 'error inserting new post');
           });
         }).catch(function(err) {
-          return console.error(err);
+          res.send(err + 'error setting balance');
         });
       } else {
-        // does not exist
-        console.log('H E k, recipient does not exist');
-        res.status(500).send('recipient does not exist');
+        // user does not exist
+        var to_send = res.locals.user;
+        to_send.parcel = 'user does not exist!';
+        res.send(to_send);
       }
+    }).catch(function(err) {
+      console.error(err);
     });
   } else {
-    res.status(500).send('invalid transaction');
+    var to_send = res.locals.user;
+    to_send.parcel = "not enough funds :'(";
+    res.send(to_send);
   }
-
 });
 
 router.post('/like/:id', function(req, res, next) {

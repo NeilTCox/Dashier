@@ -1,4 +1,5 @@
 //https://github.com/sequelize/express-example
+'use strict';
 
 var fs = require('fs');
 var path = require('path');

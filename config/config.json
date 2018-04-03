@@ -1,8 +1,8 @@
 {
   "development": {
+    "database": "novaparse",
     "username": "novaparse",
     "password": null,
-    "database": "novaparse",
     "host": "localhost",
     "dialect": "postgres",
     "define": {
@@ -10,11 +10,11 @@
     }
   },
   "test": {
-    "username": "root",
+    "database": "mocha_testing",
+    "username": "novaparse",
     "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
+    "host": "localhost",
+    "dialect": "postgres",
     "define": {
         "timestamps": false
     }
@@ -22,7 +22,6 @@
   "production": {
     "username": "root",
     "password": null,
-    "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "define": {
