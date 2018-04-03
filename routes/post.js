@@ -97,7 +97,7 @@ router.post('/', function(req, res) {
           ).then(function(post) {
             // insert new post to database
             db.sequelize.query(
-              'INSERT INTO "Posts" (sender, amount, recipient, message) VALUES (:sender, :amount, :recipient, :message)', {
+              `INSERT INTO "Posts" (sender, amount, recipient, message, likes) VALUES (:sender, :amount, :recipient, :message, '{}')`, {
                 replacements: {
                   sender: res.locals.user.username,
                   amount: req.body.amount,
@@ -139,6 +139,40 @@ router.post('/', function(req, res) {
     res.status(500).send('invalid transaction');
   }
 
+});
+
+router.post('/like/:id', function(req, res, next) {
+  console.log('in like');
+  db.sequelize.query(
+    `UPDATE "Posts" SET likes = array_cat(likes, '{${res.locals.user.username}}') WHERE ID = :id`, {
+      replacements: {
+        id: parseInt(req.params.id),
+      },
+      type: db.sequelize.QueryTypes.UPDATE
+    }
+  ).then(function() {
+    console.log('like success');
+    res.end();
+  }).catch(function(err) {
+    res.status(500).send(err);
+  });
+});
+
+router.post('/unlike/:id', function(req, res, next) {
+  console.log('in unlike');
+  db.sequelize.query(
+    `UPDATE "Posts" SET likes = array_remove(likes, '${res.locals.user.username}') WHERE ID = :id`, {
+      replacements: {
+        id: req.params.id,
+      },
+      type: db.sequelize.QueryTypes.UPDATE
+    }
+  ).then(function() {
+    console.log('like failure');
+    res.end();
+  }).catch(function(err) {
+    res.status(500).send(err);
+  });
 });
 
 module.exports = router;

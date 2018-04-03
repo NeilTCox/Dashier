@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       message: {
         type: DataTypes.STRING
       },
+      likes: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
+      },
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: sequelize.literal('NOW()'),

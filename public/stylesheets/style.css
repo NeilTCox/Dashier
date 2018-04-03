@@ -99,6 +99,17 @@ a {
   padding: 0;
 }
 
+.react_button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  float: right;
+}
+
+.react_button .fa-heart {
+  color: white;
+}
+
 .relation-button {
   display: flex;
   justify-content: center;

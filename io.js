@@ -1,7 +1,6 @@
 var session = require('client-sessions');
 var cookieParser = require('cookie');
 var mysession = require('./config');
-//var usersModel = require('./models/users');
 var db = require('./models/index.js');
 
 var io = null;

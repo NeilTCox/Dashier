@@ -1,6 +1,7 @@
 var models = require('../models');
 var express = require('express');
 var db = require('../models/index.js');
+var io = require('../io');
 var bcrypt = require('bcrypt');
 var router = express.Router();
 
@@ -88,7 +89,7 @@ router.get('/:username', function(req, res, next) {
           current_relationship = 'following';
         }
         db.sequelize.query(
-          'SELECT * FROM "Posts" WHERE SENDER = :username OR RECIPIENT = :username', {
+          'SELECT * FROM "Posts" WHERE SENDER = :username OR RECIPIENT = :username ORDER BY ID', {
             replacements: {
               username: [user[0].username],
             },
@@ -98,7 +99,8 @@ router.get('/:username', function(req, res, next) {
           res.render('profile', {
             givenUser: user[0],
             postList: posts,
-            relationship: current_relationship
+            relationship: current_relationship,
+            localUser: res.locals.user
           });
         });
       }
@@ -147,7 +149,8 @@ router.post('/:username/follow', function(req, res, next) {
               type: db.sequelize.QueryTypes.UPDATE
             }
           ).then(function(posts) {
-            //they are friends now
+            //they are friends now & join socket
+            io.socket().join(req.params.username);
             res.send(true);
           }).catch(function(err) {
             console.error(err);
@@ -211,6 +214,8 @@ router.post('/:username/unfriend', function(req, res, next) {
         type: db.sequelize.QueryTypes.UPDATE
       }
     ).then(function(posts) {
+      //they are no longer friends & leave socket
+      io.socket().leave(req.params.username);
       res.end();
     }).catch(function(err) {
       console.error(err);

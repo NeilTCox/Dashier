@@ -33,11 +33,16 @@
                         <%= postList[i].recipient %>
                       </a>
                     </div>
-                    <div class="card-body">
-                      <h5 class="card-title"><%= postList[i].amount %> Dash</h5>
-                      <p class="card-text">
-                        <%= postList[i].message %>
-                      </p>
+                    <div class="card-body" data-postid="<%= postList[i].id %>">
+                      <% if (postList[i].likes.includes(localUser.username)) { %>
+                        <button type="button" class="react_button unlike-button"><i class="fas fa-heart fa-4x"></i></button>
+                        <% } else {%>
+                          <button type="button" class="react_button like-button"><i class="far fa-heart fa-4x"></i></button>
+                          <% } %>
+                            <h5 class="card-title"><%= postList[i].amount %> Dash</h5>
+                            <p class="card-text">
+                              <%= postList[i].message %>
+                            </p>
                     </div>
                 </li>
                 <% } %>
@@ -54,18 +59,20 @@
     <script>
       $(function() {
         $('.profile-column').on('click', '.follow_button', function() {
+          this_button = this;
           $.ajax({
             method: 'POST',
             url: '/user/<%= givenUser.username %>/follow'
           }).done(function(friends_now) {
             if (friends_now) {
-              $("button").replaceWith('<button type="button" name="unfriend-button" class="btn btn-dark unfriend-button">Unfriend</button>');
+              $(this_button).replaceWith('<button type="button" name="unfriend-button" class="btn btn-dark unfriend-button">Unfriend</button>');
             } else {
-              $("button").replaceWith('<button type="button" name="unfollow-button" class="btn btn-secondary unfollow-button">Unfollow</button>');
+              $(this_button).replaceWith('<button type="button" name="unfollow-button" class="btn btn-secondary unfollow-button">Unfollow</button>');
             }
           });
         });
         $('.profile-column').on('click', '.unfollow-button', function() {
+          this_button = this;
           $.ajax({
             method: 'POST',
             url: '/user/<%= givenUser.username %>/unfollow'
@@ -73,11 +80,12 @@
             if (err) {
               console.error('user follow has failed');
             } else {
-              $("button").replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
+              $(this_button).replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
             }
           });
         });
         $('.profile-column').on('click', '.unfriend-button', function() {
+          this_button = this;
           $.ajax({
             method: 'POST',
             url: '/user/<%= givenUser.username %>/unfriend'
@@ -85,9 +93,35 @@
             if (err) {
               console.error('user follow has failed');
             } else {
-              $("button").replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
+              $(this_button).replaceWith('<button type="button" name="follow-button" class="btn btn-primary follow_button">Follow</button>');
             }
           });
+        });
+
+        //like post
+        $('.post-group').on('click', '.like-button', function() {
+          this_button = this;
+          $.ajax({
+            method: 'POST',
+            url: `/post/like/${$(this).parent().data().postid}`
+          }).then(function() {
+            $(this_button).replaceWith('<button type="button" class="react_button unlike-button"><i class="fas fa-heart fa-4x"></i></button>');
+          }).catch(function(err) {
+            console.error(err);
+          });
+        });
+        //unlike post
+        $('.post-group').on('click ', '.unlike-button ', function() {
+          this_button = this;
+          $.ajax({
+            method: 'POST',
+            url: `/post/unlike/${$(this).parent().data().postid}`
+          }).then(function() {
+            $(this_button).replaceWith('<button type="button" class="react_button like-button"><i class="far fa-heart fa-4x"></i></button>');
+          }).catch(function(err) {
+            console.error(err);
+          });
+
         });
       });
     </script>
