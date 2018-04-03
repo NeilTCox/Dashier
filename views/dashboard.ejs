@@ -12,9 +12,7 @@
               <div class="container">
                 <div class="row settings-logout-row">
                   <div class="col-md-6 dashboard-settings">
-                    <form action="https://google.com" method="#">
-                      <button type="submit"><i class="fas fa-cog fa-3x" data-fa-transform="down-3"></i></button>
-                    </form>
+                    <button type="button" data-toggle="modal" data-target="#settingsModal"><i class="fas fa-cog fa-3x" data-fa-transform="down-3"></i></button>
                   </div>
                   <div class="col-md-6 dashboard-logout">
                     <form action="/user/logout" method="get">
@@ -85,6 +83,28 @@
                 <% } %>
             </ul>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Settings</h5>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="/user/changepassword">
+                <div class="form-group">
+                  <label for="newPassword">Change password:</label>
+                  <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="s0meth1ngsup3rs3creter">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+
           </div>
         </div>
       </div>

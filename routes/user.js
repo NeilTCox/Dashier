@@ -64,21 +64,15 @@ router.post('/login', function(req, res, next) {
 
 router.post('/changepassword', function(req, res, next) {
   db.sequelize.query(
-    `UPDATE "Users" SET password = :password`, {
+    `UPDATE "Users" SET password = :password WHERE username = :username`, {
       replacements: {
-        username: req.body.joinUsername,
+        username: res.locals.user.username,
         password: models.User.hashPassword(req.body.newPassword)
       },
       type: db.sequelize.QueryTypes.UPDATE
     }
-  ).then(function(user) {
-    // DO SOMETHING
+  ).then(function() {
     res.redirect("/");
-  }).catch(function(err) {
-    // DO SOMETHING
-    res.render("index", {
-      message: "username already taken :("
-    });
   });
 });
 
