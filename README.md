@@ -52,7 +52,7 @@ Satoshi wants to pay his friend Vitalik. Vitalik has told him to sign up on Dash
   
 # // TODO
 - Finish last few Mocha tests
-- Finish off Blockcypher transaction signing (need to contact API publshers)
+- Finish off Blockcypher transaction signing (need to contact API publishers)
 
 # EZ Additions
 - Post Like counter
