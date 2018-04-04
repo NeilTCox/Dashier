@@ -21,7 +21,7 @@ Landing Page:
       - Username
       - Password
       - Desired account value
-  3. Join - modal to create an account for yourself
+  3. Login - modal to create an account for yourself
       - Username
       - Password
       - Desired account value
