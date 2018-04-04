@@ -44,8 +44,8 @@ Profile:
       - If clicked, leads back to dashboard
    2. My posts/tx's
       - Shows posts/tx's that this user has been a part of
-   ****to view a user's profile, you must get their link from them. the link format is as follows:****
-   **localhost:3000/user/[their_username]**
+   - ****to view a user's profile, you must get their link from them. the link format is as follows:****
+   - **localhost:3000/user/[their_username]**
   
 # Common Use Case
 Satoshi wants to pay his friend Vitalik. Vitalik has told him to sign up on Dashier! Satoshi signs up and he exchanges his profile link with Vitalik. They follow each other to become friends. Now they see each other's transactions, much like a popular service Venmo, and in realtime, too.
