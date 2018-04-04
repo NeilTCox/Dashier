@@ -44,7 +44,7 @@ Profile:
       - If clicked, leads back to dashboard
    2. My posts/tx's
       - Shows posts/tx's that this user has been a part of
-   - ****to view a user's profile, you must get their link from them. the link format is as follows:****
+   - ****to view a user's profile, you typically get their link from them. the permalink format is as follows:****
    - **localhost:3000/user/[their_username]**
   
 # Common Use Case
