@@ -66,7 +66,6 @@ router.post('/', function(req, res) {
 
 
   if (res.locals.user.balance > 0 && req.body.amount > 0 && req.body.amount <= res.locals.user.balance) {
-    console.log('9');
     db.sequelize.query(
       'SELECT * FROM "Users" WHERE username = :recipient', {
         replacements: {
@@ -75,9 +74,7 @@ router.post('/', function(req, res) {
         type: db.sequelize.QueryTypes.SELECT
       }
     ).then(function(user) {
-      console.log('0');
       if (user[0]) { // user never longer than 1 beacuse of username uniqueness
-        console.log('8');
         //subtract balance from sender
         db.sequelize.query(
           'UPDATE "Users" SET balance = balance - :amount WHERE username = :sender', {
@@ -89,7 +86,6 @@ router.post('/', function(req, res) {
           }
         ).then(function(post) {
           // add balance to recipient
-          console.log('1');
           db.sequelize.query(
             'UPDATE "Users" SET balance = balance + :amount WHERE username = :recipient', {
               replacements: {
@@ -99,7 +95,6 @@ router.post('/', function(req, res) {
               type: db.sequelize.QueryTypes.UPDATE
             }
           ).then(function(post) {
-            console.log('2');
             // insert new post to database
             db.sequelize.query(
               `INSERT INTO "Posts" (sender, amount, recipient, message, likes) VALUES (:sender, :amount, :recipient, :message, '{}')`, {
@@ -112,7 +107,6 @@ router.post('/', function(req, res) {
                 type: db.sequelize.QueryTypes.INSERT
               }
             ).then(function(post) {
-              console.log('3');
               //send constructed post to client along with updated balance to display
               res.locals.user.balance = res.locals.user.balance - req.body.amount;
               var newPost = {
@@ -125,34 +119,33 @@ router.post('/', function(req, res) {
               io.instance().to(req.user.id).emit('newPost', {
                 data: newPost
               });
-              res.send(newPost);
+              res.status(200).send(newPost);
             }).catch(function(err) {
-              res.send(err + 'error sending newPost');
+              res.status(500).send(err + 'error sending newPost');
             });
           }).catch(function(err) {
-            res.send(err + 'error inserting new post');
+            res.status(500).send(err + 'error inserting new post');
           });
         }).catch(function(err) {
-          res.send(err + 'error setting balance');
+          res.status(500).send(err + 'error setting balance');
         });
       } else {
         // user does not exist
         var to_send = res.locals.user;
         to_send.parcel = 'user does not exist!';
-        res.send(to_send);
+        res.status(404).send(to_send);
       }
     }).catch(function(err) {
-      console.error(err);
+      res.status(404).send(err + 'error finding recipient');
     });
   } else {
     var to_send = res.locals.user;
     to_send.parcel = "not enough funds :'(";
-    res.send(to_send);
+    res.status(402).send(to_send);
   }
 });
 
 router.post('/like/:id', function(req, res, next) {
-  console.log('in like');
   db.sequelize.query(
     `UPDATE "Posts" SET likes = array_cat(likes, '{${res.locals.user.username}}') WHERE ID = :id`, {
       replacements: {
@@ -161,15 +154,13 @@ router.post('/like/:id', function(req, res, next) {
       type: db.sequelize.QueryTypes.UPDATE
     }
   ).then(function() {
-    console.log('like success');
-    res.end();
+    res.status(200).end();
   }).catch(function(err) {
     res.status(500).send(err);
   });
 });
 
 router.post('/unlike/:id', function(req, res, next) {
-  console.log('in unlike');
   db.sequelize.query(
     `UPDATE "Posts" SET likes = array_remove(likes, '${res.locals.user.username}') WHERE ID = :id`, {
       replacements: {
@@ -178,8 +169,7 @@ router.post('/unlike/:id', function(req, res, next) {
       type: db.sequelize.QueryTypes.UPDATE
     }
   ).then(function() {
-    console.log('like failure');
-    res.end();
+    res.status(200).end();
   }).catch(function(err) {
     res.status(500).send(err);
   });

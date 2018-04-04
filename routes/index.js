@@ -4,7 +4,6 @@ var router = express.Router();
 var db = require('../models/index.js');
 
 router.get('/', function(req, res, next) {
-  console.log('we hit the homepage route');
   if (typeof req.user !== 'undefined') {
     // //testing query
     // db.sequelize.query(
@@ -25,7 +24,7 @@ router.get('/', function(req, res, next) {
         type: db.sequelize.QueryTypes.SELECT
       }
     ).then(function(posts) {
-      res.render('dashboard', {
+      res.status(200).render('dashboard', {
         loggedUser: res.locals.user,
         postList: posts,
         message: ''
@@ -33,7 +32,7 @@ router.get('/', function(req, res, next) {
     });
   } else {
     //user not logged in
-    res.render('index', {
+    res.status(200).render('index', {
       message: ''
     });
   }

@@ -23,10 +23,10 @@ router.post('/join', function(req, res, next) {
       type: db.sequelize.QueryTypes.INSERT
     }
   ).then(function(user) {
-    res.redirect("/");
+    res.status(200).redirect("/");
   }).catch(function(err) {
     //username already taken
-    res.render("index", {
+    res.status(400).render("index", {
       message: "username already taken :("
     });
   });
@@ -36,7 +36,7 @@ router.post('/login', function(req, res, next) {
   db.sequelize.query(
     'SELECT * FROM "Users" WHERE username = :username', {
       replacements: {
-        username: req.body.loginUsername,
+        username: req.body.loginUsername
       },
       type: db.sequelize.QueryTypes.SELECT
     }
@@ -47,7 +47,7 @@ router.post('/login', function(req, res, next) {
           req.session.user = user[0];
           res.status(200).redirect('/');
         } else {
-          res.render('index', {
+          res.status(401).render('index', {
             message: "password incorrect!"
           });
         }
@@ -55,7 +55,7 @@ router.post('/login', function(req, res, next) {
       });
     } else {
       //user does not exist
-      res.render('index', {
+      res.status(404).render('index', {
         message: "username does not exist :O"
       });
     }
@@ -71,14 +71,17 @@ router.post('/changepassword', function(req, res, next) {
       },
       type: db.sequelize.QueryTypes.UPDATE
     }
-  ).then(function() {
-    res.redirect("/");
+  ).then(function(user) {
+    res.status(200).redirect("/");
+  }).catch(function(err) {
+    console.log(err);
+    res.status(500).send(err);
   });
 });
 
 router.get('/logout', function(req, res) {
   req.session.reset();
-  res.redirect('/');
+  res.status(200).redirect('/');
 });
 
 router.get('/:username', function(req, res, next) {
@@ -95,7 +98,7 @@ router.get('/:username', function(req, res, next) {
       }
     ).then(function(user) {
       //if user exists
-      if (user[0]) {
+      if (user.length > 0) {
         //get relationships between this user and local user
         db.sequelize.query(
           'SELECT * FROM "FollowerFollowed" WHERE (FOLLOWER = :local_id AND FOLLOWED = :other_id) OR (FOLLOWER = :other_id AND FOLLOWED = :local_id)', {
@@ -121,7 +124,7 @@ router.get('/:username', function(req, res, next) {
               type: db.sequelize.QueryTypes.SELECT
             }
           ).then(function(posts) {
-            res.render('profile', {
+            res.status(200).render('profile', {
               givenUser: user[0],
               postList: posts,
               relationship: current_relationship,
@@ -130,13 +133,13 @@ router.get('/:username', function(req, res, next) {
           });
         });
       } else {
-        //404
+        //user does not exist
         res.redirect('https://github.com/404');
       }
     });
   } else {
     //you must sign up to see other users
-    res.render('index', {
+    res.status(403).render('index', {
       message: '↖ please login view your friends!'
     });
   }
@@ -178,9 +181,8 @@ router.post('/:userid/follow', function(req, res, next) {
           }
         ).then(function() {
           //join socket & they are friends now since both are following each other
-          console.log(req.params.userid);
           io.socket().join(parseInt(req.params.userid));
-          res.send(true);
+          res.status(200).send(true);
         });
       }).catch(function(err) {
         console.error(err);
@@ -198,11 +200,11 @@ router.post('/:userid/follow', function(req, res, next) {
         }
       ).then(function() {
         //they are not friends yet
-        res.send(false);
+        res.status(200).send(false);
       });
     }
   }).catch(function(err) {
-    console.error(err);
+    res.status(500).send(err);
   });
 });
 
@@ -216,9 +218,9 @@ router.post('/:userid/unfollow', function(req, res, next) {
       type: db.sequelize.QueryTypes.DELETE
     }
   ).then(function() {
-    res.end();
+    res.status(200).end();
   }).catch(function(err) {
-    console.error(err);
+    res.status(500).send(err);
   });
 });
 
@@ -233,11 +235,10 @@ router.post('/:userid/unfriend', function(req, res, next) {
     }
   ).then(function() {
     //they are no longer friends & leave socket
-    console.log(req.params.userid);
     io.socket().leave(parseInt(req.params.userid));
-    res.end();
+    res.status(200).end();
   }).catch(function(err) {
-    console.error(err);
+    res.status(500).send(err);
   });
 });
 

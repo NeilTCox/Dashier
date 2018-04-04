@@ -21,6 +21,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+module.exports = server;
 
 var io = require('../io').init(server);
 
