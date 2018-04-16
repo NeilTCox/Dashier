@@ -178,7 +178,9 @@
       <script src="/socket.io/socket.io.js"></script>
       <script type="text/javascript">
         var socket = io();
-        var current_post_id = parseInt($('.list-group-item').first().find('.card-body').data().postid);
+        if (typeof(parseInt($('.list-group-item').first().find('.card-body').data().postid)) !== 'undefined') {
+          var current_post_id = parseInt($('.list-group-item').first().find('.card-body').data().postid);
+        }
         //alert(parseInt($('.list-group-item').first().find('.card-body').data().postid));
         socket.on('newPost', (data) => {
           current_post_id += 1

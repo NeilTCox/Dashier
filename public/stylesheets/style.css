@@ -139,3 +139,7 @@ a {
   margin-top: 200px;
   text-align: center;
 }
+
+.hide {
+  display: none;
+}

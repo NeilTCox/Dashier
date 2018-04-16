@@ -3,6 +3,7 @@ var express = require('express');
 var db = require('../models/index.js');
 var io = require('../io');
 var bcrypt = require('bcrypt');
+var HTTPStatus = require('http-status');
 var router = express.Router();
 
 function checkPassword(given_password, db_password) {
@@ -10,19 +11,34 @@ function checkPassword(given_password, db_password) {
 }
 
 router.post('/join', function(req, res, next) {
+  const {
+    joinUsername,
+    joinEmail,
+    joinPassword
+  } = req.body;
+
+  if (!joinUsername) return res.status(HTTPStatus.BAD_REQUEST).send('username is required');
+  if (!joinEmail) return res.status(HTTPStatus.BAD_REQUEST).send('email is required');
+  if (!joinPassword) return res.status(HTTPStatus.BAD_REQUEST).send('password is required');
+
+  const initial_balance = 100;
+
   db.sequelize.query(
     // OLD QUERY `INSERT INTO "Users" (username, password, dashaddress, privatekey, friends, following) VALUES (:username, :password, :dashaddress, :privatekey, '{${req.body.joinUsername}}', '{}')`
-    `INSERT INTO "Users" (username, password, balance) VALUES (:username, :password, :balance)`, {
+    `INSERT INTO "Users" (username, email, password, balance) VALUES (:username, :email, :password, :balance)`, {
       replacements: {
         username: req.body.joinUsername,
-        password: models.User.hashPassword(req.body.joinPassword),
-        balance: req.body.joinBalance,
-        //dashaddress: req.body.joinDashAddress,
+        email: req.body.joinEmail,
+        password: models.users.hashPassword(req.body.joinPassword),
+        balance: initial_balance, // TODO: auto generate free transaction
+        // dashaddress: req.body.joinDashAddress,
         //privatekey: req.body.privateKey
       },
       type: db.sequelize.QueryTypes.INSERT
     }
   ).then(function(user) {
+    console.log(user);
+    req.session.user = user;
     res.status(200).redirect("/");
   }).catch(function(err) {
     //username already taken
